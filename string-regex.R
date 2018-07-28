@@ -10,7 +10,7 @@ tail(reported_heights)
 library(dplyr)
 
 # Check for na
-reported_heights <- reported_heights %>%
+reported_heights %>%
   mutate(height.numeric=as.numeric(.$height)) %>%
   filter(is.na(.$height.numeric))
 head(reported_heights)
@@ -44,3 +44,37 @@ reported_heights$height %>% str_replace('^([4-7]),(\\d*)$', '\\1\'\\2')
 reported_heights$height %>%
   str_subset('^([4-7])\\s*[,\\.\\s+]\\s*(\\d*)$') %>%
   str_replace('^([4-7])\\s*[,\\.\\s+]\\s*(\\d*)$', '\\1\'\\2')
+
+str_trim('    Hello Workd!!      ') %>%
+  str_to_upper() %>%
+  str_to_lower()
+
+# Load tidyr package for extract
+library(tidyr)
+
+reported_heights %>%
+  extract('height', c('feet', 'inches'), regex='(\\d)\'(\\d{1,2})')
+
+
+data("research_funding_rates")
+data("raw_data_research_funding_rates")
+
+data.raw <- raw_data_research_funding_rates %>%
+  str_split('\n')
+
+data.raw <- data.raw[[1]]
+data.raw[3] %>%
+  str_trim() %>%
+  str_replace_all(',\\s.', '') %>%
+  str_split('\\s{2,}', simplify=T) %>%
+  head()
+
+data.raw[2] %>%
+  str_trim() %>%
+  str_split('\\s+', simplify=T)
+
+data("gapminder")
+gapminder %>%
+  filter(.$region == 'Caribbean') %>%
+  filter(str_length(.$country) >= 12) %>%
+  head()
